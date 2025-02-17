@@ -5,11 +5,8 @@ import time
 import os
 from PIL import Image
 
+# Cek apakah model tersedia
 st.title("Prediksi Antraknosa pada Pisang 🍌")
-
-# Simpan model yang dipilih sebelumnya
-if "selected_model" not in st.session_state:
-    st.session_state.selected_model = None
 
 # Daftar model
 model_paths = {
@@ -18,13 +15,8 @@ model_paths = {
     "VGG16 FT": "VGG16 FT.h5"
 }
 
-# Dropdown pemilihan model
+# Pilihan model dengan dropdown
 selected_model_name = st.selectbox("Pilih Model:", list(model_paths.keys()))
-
-# Restart aplikasi jika model berubah
-if selected_model_name != st.session_state.selected_model:
-    st.session_state.selected_model = selected_model_name
-    st.rerun()
 
 # Fungsi untuk memuat model
 @st.cache_resource
@@ -38,15 +30,9 @@ def load_model(model_name):
 
 # Load model berdasarkan pilihan pengguna
 model = load_model(selected_model_name)
-try:
-    with open(model_path, "rb") as f:
-        f.read(4)  # Coba baca file
-    st.write(f"✅ File {model_path} berhasil dibuka.")
-except Exception as e:
-    st.error(f"❌ Gagal membuka {model_path}: {e}")
 
 # Upload file gambar
-uploaded_file = st.file_uploader("Unggah gambar pisang 🍌", type=["jpg", "png", "jpeg","webp"])
+uploaded_file = st.file_uploader("Unggah gambar pisang 🍌", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None and model is not None:
     # Baca gambar
