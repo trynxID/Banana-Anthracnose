@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 import time
 from PIL import Image
+import threading
 
 # Pastikan daftar model sesuai dengan yang ada di folder utama
 st.title("Prediksi Antraknosa pada Pisang 🍌")
@@ -11,6 +12,8 @@ st.title("Prediksi Antraknosa pada Pisang 🍌")
 # Simpan model yang dipilih sebelumnya
 if "selected_model" not in st.session_state:
     st.session_state.selected_model = None
+if "model" not in st.session_state:
+    st.session_state.model = None
 
 # Daftar model
 model_paths = {
@@ -25,20 +28,21 @@ selected_model_name = st.selectbox("Pilih Model:", list(model_paths.keys()))
 # Restart aplikasi jika model berubah
 if selected_model_name != st.session_state.selected_model:
     st.session_state.selected_model = selected_model_name
-    st.rerun()
+    st.session_state.model = None  # Reset model saat model berubah
+    st.experimental_rerun()
 
 # Fungsi untuk memuat model
-@st.cache_resource
 def load_model(model_name):
     if not os.path.exists(model_name):
         st.error(f"Model {model_name} tidak ditemukan! Pastikan file ada di folder utama.")
-        st.stop()
+        return None
     try:
         st.write(f"📂 Memuat model {model_name}...")
-        return tf.keras.models.load_model(model_name)
+        model = tf.keras.models.load_model(model_name)
+        st.session_state.model = model
+        st.success(f"✅ Model {model_name} berhasil dimuat.")
     except Exception as e:
         st.error(f"❌ Gagal memuat model: {e}")
-        return None
 
 # Cek apakah model ada
 st.write("File yang ada di direktori utama:", os.listdir())
@@ -52,13 +56,15 @@ try:
 except Exception as e:
     st.error(f"❌ Gagal membuka {model_path}: {e}")
 
-# Load model berdasarkan pilihan pengguna
-model = load_model(model_path)
+# Load model berdasarkan pilihan pengguna secara asinkronus
+if st.session_state.model is None:
+    load_thread = threading.Thread(target=load_model, args=(model_path,))
+    load_thread.start()
 
 # Upload gambar
 uploaded_file = st.file_uploader("Unggah gambar pisang 🍌", type=["jpg", "jpeg", "png", "webp"])
 
-if uploaded_file is not None and model is not None:
+if uploaded_file is not None and st.session_state.model is not None:
     # Baca gambar
     image = Image.open(uploaded_file)
     st.image(image, caption="Gambar yang diunggah", use_column_width=True)
@@ -71,7 +77,7 @@ if uploaded_file is not None and model is not None:
     # Prediksi
     st.write("⏳ Mendeteksi...")
     start_time = time.time()
-    predictions = model.predict(img_array)
+    predictions = st.session_state.model.predict(img_array)
     end_time = time.time()
     
     # Hasil prediksi
@@ -86,5 +92,5 @@ if uploaded_file is not None and model is not None:
 else:
     if uploaded_file is None:
         st.info("📤 Silakan unggah gambar terlebih dahulu.")
-    elif model is None:
-        st.error("❌ Model tidak ditemukan atau gagal dimuat. Periksa file model Anda!")
+    elif st.session_state.model is None:
+        st.warning("🔄 Memuat model, harap tunggu...")
