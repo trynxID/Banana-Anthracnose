@@ -12,8 +12,8 @@ def load_model(model_name):
 # Mapping model names to file paths
 model_paths = {
     "CNN": "CNN.h5",
-    "VGG16 FFE": "VGG16 FFE.h5",
-    "VGG16 FT": "VGG16 FT.h5"
+    "VGG16 FFE": "VGG16_FFE.h5",  # Pastikan nama file sesuai
+    "VGG16 FT": "VGG16_FT.h5"       # Pastikan nama file sesuai
 }
 
 # Streamlit UI
