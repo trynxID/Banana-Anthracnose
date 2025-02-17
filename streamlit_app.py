@@ -26,7 +26,20 @@ st.write("Upload gambar pisang untuk mendeteksi apakah terkena antraknosa atau t
 
 # Dropdown untuk memilih model
 selected_model_name = st.selectbox("Pilih Model", list(model_paths.keys()))
-model = load_model(model_paths[selected_model_name])
+#model = load_model(model_paths[selected_model_name])
+import os
+
+# Cek apakah model ada
+st.write("File yang ada di direktori utama:", os.listdir())
+
+# Coba baca model sebagai biner untuk cek korupsi
+model_path = model_paths[selected_model_name]
+try:
+    with open(model_path, "rb") as f:
+        f.read(4)  # Coba baca file
+    st.write(f"✅ File {model_path} berhasil dibuka.")
+except Exception as e:
+    st.error(f"❌ Gagal membuka {model_path}: {e}")
 
 # Upload gambar
 uploaded_file = st.file_uploader("Unggah gambar", type=["jpg", "jpeg", "png","webp"])
