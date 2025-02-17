@@ -25,12 +25,6 @@ model_paths = {
 # Dropdown pemilihan model
 selected_model_name = st.selectbox("Pilih Model:", list(model_paths.keys()))
 
-# Restart aplikasi jika model berubah
-if selected_model_name != st.session_state.selected_model:
-    st.session_state.selected_model = selected_model_name
-    st.session_state.model = None  # Reset model saat model berubah
-    st.experimental_rerun()
-
 # Fungsi untuk memuat model
 def load_model(model_name):
     if not os.path.exists(model_name):
