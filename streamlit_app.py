@@ -28,6 +28,7 @@ selected_model_name = st.selectbox("Pilih Model:", list(model_paths.keys()))
 # Cek apakah model ada
 model_path = model_paths[selected_model_name]
 st.write(model_path)
+st.wrtite(st.session_state)
 
 # Coba baca model sebagai biner untuk cek korupsi
 try:
