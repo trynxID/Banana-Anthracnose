@@ -18,8 +18,8 @@ if "model" not in st.session_state:
 # Daftar model
 model_paths = {
     "CNN": "CNN.h5",
-    "VGG16 FFE": "VGG16_FFE.h5",  # Pastikan nama file sesuai
-    "VGG16 FT": "VGG16_FT.h5"       # Pastikan nama file sesuai
+    "VGG16 FFE": "VGG16 FFE.h5",  # Pastikan nama file sesuai
+    "VGG16 FT": "VGG16 FT.h5"       # Pastikan nama file sesuai
 }
 
 # Dropdown pemilihan model
@@ -39,7 +39,6 @@ def load_model(model_name):
         st.error(f"❌ Gagal memuat model: {e}")
 
 # Cek apakah model ada
-st.write("File yang ada di direktori utama:", os.listdir())
 model_path = model_paths[selected_model_name]
 
 # Coba baca model sebagai biner untuk cek korupsi
