@@ -6,6 +6,13 @@ import time
 import h5py
 from PIL import Image
 
+file_path = "VGG16 FT.h5"
+
+if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
+    print("✅ File ditemukan, ukurannya:", os.path.getsize(file_path), "bytes")
+else:
+    print("❌ File tidak ditemukan atau rusak!")
+
 with h5py.File("VGG16 FT.h5", "r") as f:
     print(f.keys())  # Harus ada 'model_weights' atau 'model_config'
 # Judul aplikasi
