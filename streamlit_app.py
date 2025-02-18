@@ -5,7 +5,7 @@ import numpy as np
 import time
 import h5py
 from PIL import Image
-sample_path = "CNN.h5"'
+sample_path = "CNN.h5"
 model_path = sample_path
 try:
     with h5py.File(model_path, "r") as f:
