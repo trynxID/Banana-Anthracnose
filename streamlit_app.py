@@ -5,6 +5,9 @@ import numpy as np
 import time
 import h5py
 from PIL import Image
+
+with h5py.File("VGG16 FT.h5", "r") as f:
+    print(f.keys())  # Harus ada 'model_weights' atau 'model_config'
 sample_path = "CNN.h5"
 model_path = sample_path
 try:
