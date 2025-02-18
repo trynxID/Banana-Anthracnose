@@ -4,64 +4,48 @@ import tensorflow as tf
 import numpy as np
 import time
 from PIL import Image
-import threading
 
-# Pastikan daftar model sesuai dengan yang ada di folder utama
+# Judul aplikasi
 st.title("Prediksi Antraknosa pada Pisang 🍌")
 
-# Simpan model yang dipilih sebelumnya
-if "selected_model" not in st.session_state:
-    st.session_state.selected_model = None
-if "model" not in st.session_state:
-    st.session_state.model = None
-
-# Daftar model
+# Daftar model yang tersedia
 model_paths = {
     "CNN": "CNN.h5",
-    "VGG16 FFE": "VGG16 FFE.h5",  # Pastikan nama file sesuai
-    "VGG16 FT": "VGG16 FT.h5"       # Pastikan nama file sesuai
+    "VGG16 FFE": "VGG16 FFE.h5",
+    "VGG16 FT": "VGG16 FT.h5"
 }
+
+# Inisialisasi session state jika belum ada
+if "models" not in st.session_state:
+    st.session_state["models"] = {}
+
+# Fungsi untuk memuat semua model sekaligus dan menyimpannya dalam dictionary
+def load_models():
+    for name, path in model_paths.items():
+        if not os.path.exists(path):
+            st.error(f"⚠ Model {path} tidak ditemukan! Pastikan file ada di folder utama.")
+            continue
+        try:
+            st.write(f"📂 Memuat model {name}...")
+            st.session_state["models"][name] = tf.keras.models.load_model(path)
+            st.success(f"✅ Model {name} berhasil dimuat.")
+        except Exception as e:
+            st.error(f"❌ Gagal memuat model {name}: {e}")
+
+# Panggil fungsi pemuatan model (hanya pertama kali)
+if not st.session_state["models"]:
+    load_models()
 
 # Dropdown pemilihan model
 selected_model_name = st.selectbox("Pilih Model:", list(model_paths.keys()))
 
-# Cek apakah model ada
-model_path = model_paths[selected_model_name]
-st.write(model_path)
-st.write(st.session_state)
-st.write(st.session_state.selected_model)
-st.write(st.session_state.model)
-
-# Coba baca model sebagai biner untuk cek korupsi
-try:
-    with open(model_path, "rb") as f:
-        f.read(4)  # Coba baca file
-        st.write(f"✅ File {model_path} berhasil dibuka.")
-except Exception as e:
-    st.error(f"❌ Gagal membuka {model_path}: {e}")
-
-# Fungsi untuk memuat model
-def load_model(model_name):
-    if not os.path.exists(model_name):
-        st.error(f"Model {model_name} tidak ditemukan! Pastikan file ada di folder utama.")
-        return None
-    try:
-        st.write(f"📂 Memuat model {model_name}...")
-        model = tf.keras.models.load_model(model_name)
-        st.session_state.model = model
-        st.success(f"✅ Model {model_name} berhasil dimuat.")
-    except Exception as e:
-        st.error(f"❌ Gagal memuat model: {e}")
-
-# Load model berdasarkan pilihan pengguna secara asinkronus
-if st.session_state.model is None:
-    load_thread = threading.Thread(target=load_model, args=(model_path,))
-    load_thread.start()
+# Dapatkan model yang sudah dimuat
+model = st.session_state["models"].get(selected_model_name)
 
 # Upload gambar
 uploaded_file = st.file_uploader("Unggah gambar pisang 🍌", type=["jpg", "jpeg", "png", "webp"])
 
-if uploaded_file is not None and st.session_state.model is not None:
+if uploaded_file is not None and model is not None:
     # Baca gambar
     image = Image.open(uploaded_file)
     st.image(image, caption="Gambar yang diunggah", use_column_width=True)
@@ -74,7 +58,7 @@ if uploaded_file is not None and st.session_state.model is not None:
     # Prediksi
     st.write("⏳ Mendeteksi...")
     start_time = time.time()
-    predictions = st.session_state.model.predict(img_array)
+    predictions = model.predict(img_array)
     end_time = time.time()
     
     # Hasil prediksi
@@ -89,5 +73,6 @@ if uploaded_file is not None and st.session_state.model is not None:
 else:
     if uploaded_file is None:
         st.info("📤 Silakan unggah gambar terlebih dahulu.")
-    elif st.session_state.model is None:
-        st.warning("🔄 Memuat model, harap tunggu...")
+    elif model is None:
+        st.warning("⚠ Model belum tersedia atau gagal dimuat.")
+
