@@ -10,9 +10,9 @@ st.title("Prediksi Antraknosa pada Pisang 🍌")
 st.write("Files in current directory:", os.listdir("."))
 # Daftar model yang tersedia
 model_paths = {
-    "CNN": "CNN.keras",
-    "VGG16 FFE": "VGG16 FFE.keras",
-    "VGG16 FT": "VGG16 FT.keras"
+    "CNN": "CNN.h5",
+    "VGG16 FFE": "VGG16 FFE.h5",
+    "VGG16 FT": "VGG16 FT.h5"
 }
 
 # Inisialisasi session state jika belum ada
