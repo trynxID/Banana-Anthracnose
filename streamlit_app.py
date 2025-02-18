@@ -25,6 +25,18 @@ model_paths = {
 # Dropdown pemilihan model
 selected_model_name = st.selectbox("Pilih Model:", list(model_paths.keys()))
 
+# Cek apakah model ada
+model_path = model_paths[selected_model_name]
+st.write(model_path)
+
+# Coba baca model sebagai biner untuk cek korupsi
+try:
+    with open(model_path, "rb") as f:
+        f.read(4)  # Coba baca file
+        st.write(f"✅ File {model_path} berhasil dibuka.")
+except Exception as e:
+    st.error(f"❌ Gagal membuka {model_path}: {e}")
+
 # Fungsi untuk memuat model
 def load_model(model_name):
     if not os.path.exists(model_name):
@@ -37,17 +49,6 @@ def load_model(model_name):
         st.success(f"✅ Model {model_name} berhasil dimuat.")
     except Exception as e:
         st.error(f"❌ Gagal memuat model: {e}")
-
-# Cek apakah model ada
-model_path = model_paths[selected_model_name]
-
-# Coba baca model sebagai biner untuk cek korupsi
-try:
-    with open(model_path, "rb") as f:
-        f.read(4)  # Coba baca file
-    st.write(f"✅ File {model_path} berhasil dibuka.")
-except Exception as e:
-    st.error(f"❌ Gagal membuka {model_path}: {e}")
 
 # Load model berdasarkan pilihan pengguna secara asinkronus
 if st.session_state.model is None:
