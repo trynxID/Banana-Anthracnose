@@ -27,7 +27,7 @@ def load_models():
             continue
         try:
             st.write(f"📂 Memuat model {name}...")
-            st.session_state["models"][name] = tf.keras.models.load_model(path)
+            st.session_state["models"][name] = tf.keras.models.load_model(path,compile=False)
             st.success(f"✅ Model {name} berhasil dimuat.")
         except Exception as e:
             st.error(f"❌ Gagal memuat model {name}: {e}")
