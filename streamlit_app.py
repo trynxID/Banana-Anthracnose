@@ -13,7 +13,7 @@ if not os.path.exists(models_dir):
 
 # URL file Google Drive untuk model
 urls = {
-    https://drive.google.com/file/d/1--gWPyFz1fzHJ2LxO2pnjB4C_nzpnLR3/view?usp=drive_link
+    
     "CNN": "https://drive.google.com/uc?id=1-0P6yP2DMDJOaW9aoScbB5qtRFoxgCrD",  # Ganti dengan ID file Google Drive CNN
     "VGG16 FFE": "https://drive.google.com/uc?id=1-0U_idFmsQ5wwm1n3aq46XeCs10j9bmP",  # Ganti dengan ID file Google Drive VGG16 FFE
     "VGG16 FT": "https://drive.google.com/uc?id=1--gWPyFz1fzHJ2LxO2pnjB4C_nzpnLR3",  # Ganti dengan ID file Google Drive VGG16 FT
