@@ -67,7 +67,7 @@ uploaded_file = st.file_uploader("Unggah gambar pisang 🍌", type=["jpg", "jpeg
 if uploaded_file is not None and model is not None:
     # Baca gambar
     image = Image.open(uploaded_file)
-    st.image(image, caption="Gambar yang diunggah", use_column_width=True)
+    st.image(image, caption="Gambar yang diunggah", use_container_width=True)
 
     # Preprocessing gambar
     img = image.resize((224, 224))  # Sesuaikan ukuran input model
