@@ -7,7 +7,7 @@ from PIL import Image
 
 # Judul aplikasi
 st.title("Prediksi Antraknosa pada Pisang 🍌")
-
+st.write("Files in current directory:", os.listdir("."))
 # Daftar model yang tersedia
 model_paths = {
     "CNN": "CNN.keras",
