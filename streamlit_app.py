@@ -3,8 +3,16 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 import time
+import h5py
 from PIL import Image
-
+sample_path = "CNN.h5"'
+model_path = sample_path
+try:
+    with h5py.File(model_path, "r") as f:
+        st.write(f"{model_path} berhasil dibuka coy")
+    st.write(f"✅ File {model_path} berhasil dibuka.")
+except Exception as e:
+    st.error(f"❌ Gagal membuka {model_path}: {e}")
 # Judul aplikasi
 st.title("Prediksi Antraknosa pada Pisang 🍌")
 st.write("Files in current directory:", os.listdir("."))
