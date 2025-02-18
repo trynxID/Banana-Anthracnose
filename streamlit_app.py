@@ -1,28 +1,36 @@
 import os
-import streamlit as st
+import gdown
 import tensorflow as tf
+import streamlit as st
+from PIL import Image
 import numpy as np
 import time
-import h5py
-from PIL import Image
 
-file_path = "VGG16 FT.h5"
+# Membuat folder 'models' jika belum ada
+models_dir = 'models'
+if not os.path.exists(models_dir):
+    os.makedirs(models_dir)
 
-if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-    print("✅ File ditemukan, ukurannya:", os.path.getsize(file_path), "bytes")
-else:
-    print("❌ File tidak ditemukan atau rusak!")
+# URL file Google Drive untuk model
+urls = {
+    https://drive.google.com/file/d/1--gWPyFz1fzHJ2LxO2pnjB4C_nzpnLR3/view?usp=drive_link
+    "CNN": "https://drive.google.com/uc?id=1-0P6yP2DMDJOaW9aoScbB5qtRFoxgCrD",  # Ganti dengan ID file Google Drive CNN
+    "VGG16 FFE": "https://drive.google.com/uc?id=1-0U_idFmsQ5wwm1n3aq46XeCs10j9bmP",  # Ganti dengan ID file Google Drive VGG16 FFE
+    "VGG16 FT": "https://drive.google.com/uc?id=1--gWPyFz1fzHJ2LxO2pnjB4C_nzpnLR3",  # Ganti dengan ID file Google Drive VGG16 FT
+}
 
-with h5py.File("VGG16 FT.h5", "r") as f:
-    print(f.keys())  # Harus ada 'model_weights' atau 'model_config'
-# Judul aplikasi
-st.title("Prediksi Antraknosa pada Pisang 🍌")
-st.write("Files in current directory:", os.listdir("."))
-# Daftar model yang tersedia
+# Mengunduh model ke dalam folder models
+for model_name, url in urls.items():
+    model_file_path = os.path.join(models_dir, f'{model_name}.h5')
+    if not os.path.exists(model_file_path):
+        st.write(f"📥 Mengunduh model {model_name}...")
+        gdown.download(url, model_file_path, quiet=False)
+
+# Memuat model
 model_paths = {
-    "CNN": "CNN.h5",
-    "VGG16 FFE": "VGG16 FFE.h5",
-    "VGG16 FT": "VGG16 FT.h5"
+    "CNN": os.path.join(models_dir, "CNN.h5"),
+    "VGG16 FFE": os.path.join(models_dir, "VGG16 FFE.h5"),
+    "VGG16 FT": os.path.join(models_dir, "VGG16 FT.h5")
 }
 
 # Inisialisasi session state jika belum ada
@@ -32,12 +40,9 @@ if "models" not in st.session_state:
 # Fungsi untuk memuat semua model sekaligus dan menyimpannya dalam dictionary
 def load_models():
     for name, path in model_paths.items():
-        if not os.path.exists(path):
-            st.error(f"⚠ Model {path} tidak ditemukan! Pastikan file ada di folder utama.")
-            continue
         try:
             st.write(f"📂 Memuat model {name}...")
-            st.session_state["models"][name] = tf.keras.models.load_model(path,compile=False)
+            st.session_state["models"][name] = tf.keras.models.load_model(path, compile=False)
             st.success(f"✅ Model {name} berhasil dimuat.")
         except Exception as e:
             st.error(f"❌ Gagal memuat model {name}: {e}")
@@ -45,6 +50,9 @@ def load_models():
 # Panggil fungsi pemuatan model (hanya pertama kali)
 if not st.session_state["models"]:
     load_models()
+
+# Judul aplikasi Streamlit
+st.title("Prediksi Antraknosa pada Pisang 🍌")
 
 # Dropdown pemilihan model
 selected_model_name = st.selectbox("Pilih Model:", list(model_paths.keys()))
@@ -83,6 +91,3 @@ if uploaded_file is not None and model is not None:
 else:
     if uploaded_file is None:
         st.info("📤 Silakan unggah gambar terlebih dahulu.")
-    elif model is None:
-        st.warning("⚠ Model belum tersedia atau gagal dimuat.")
-
