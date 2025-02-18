@@ -10,9 +10,9 @@ st.title("Prediksi Antraknosa pada Pisang 🍌")
 
 # Daftar model yang tersedia
 model_paths = {
-    "CNN": "CNN.h5",
-    "VGG16 FFE": "VGG16 FFE.h5",
-    "VGG16 FT": "VGG16 FT.h5"
+    "CNN": "CNN.keras",
+    "VGG16 FFE": "VGG16 FFE.keras",
+    "VGG16 FT": "VGG16 FT.keras"
 }
 
 # Inisialisasi session state jika belum ada
