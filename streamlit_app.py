@@ -87,6 +87,7 @@ if uploaded_file is not None and model is not None:
     exec_time = end_time - start_time
 
     # Menampilkan hasil prediksi
+    st.write(f"Model yang digunakan : {model[name]}")
     st.success(f"✅ Hasil Prediksi: **{hasil}** ({prob_percentage}%)")
     st.write(f"⏱ Waktu eksekusi: {exec_time:.3f} detik")
 else:
