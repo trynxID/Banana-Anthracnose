@@ -39,13 +39,14 @@ if "models" not in st.session_state:
 
 # Fungsi untuk memuat semua model sekaligus dan menyimpannya dalam dictionary
 def load_models():
+    manage_app_message = st.empty()  # Buat ruang kosong untuk menampilkan pesan
     for name, path in model_paths.items():
         try:
-            st.write(f"📂 Memuat model {name}...")
+            manage_app_message.text(f"📂 Memuat model {name}...")
             st.session_state["models"][name] = tf.keras.models.load_model(path, compile=False)
-            st.success(f"✅ Model {name} berhasil dimuat.")
+            manage_app_message.success(f"✅ Model {name} berhasil dimuat.")
         except Exception as e:
-            st.error(f"❌ Gagal memuat model {name}: {e}")
+            manage_app_message.error(f"❌ Gagal memuat model {name}: {e}")
 
 # Panggil fungsi pemuatan model (hanya pertama kali)
 if not st.session_state["models"]:
