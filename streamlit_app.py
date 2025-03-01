@@ -13,7 +13,6 @@ if not os.path.exists(models_dir):
 
 # URL file Google Drive untuk model
 urls = {
-    
     "CNN": "https://drive.google.com/uc?id=1-0P6yP2DMDJOaW9aoScbB5qtRFoxgCrD",  # Ganti dengan ID file Google Drive CNN
     "VGG16 FFE": "https://drive.google.com/uc?id=1-0U_idFmsQ5wwm1n3aq46XeCs10j9bmP",  # Ganti dengan ID file Google Drive VGG16 FFE
     "VGG16 FT": "https://drive.google.com/uc?id=1--gWPyFz1fzHJ2LxO2pnjB4C_nzpnLR3",  # Ganti dengan ID file Google Drive VGG16 FT
@@ -67,7 +66,6 @@ uploaded_file = st.file_uploader("Unggah gambar pisang 🍌", type=["jpg", "jpeg
 if uploaded_file is not None and model is not None:
     # Baca gambar
     image = Image.open(uploaded_file)
-    st.image(image, caption="Gambar yang diunggah", use_container_width=True)
 
     # Preprocessing gambar
     img = image.resize((224, 224))  # Sesuaikan ukuran input model
@@ -86,10 +84,16 @@ if uploaded_file is not None and model is not None:
     prob_percentage = round(prob * 100, 2) if prob > 0.5 else round((1 - prob) * 100, 2)
     exec_time = end_time - start_time
 
-    # Menampilkan hasil prediksi
-    st.write(f"Model yang digunakan: {selected_model_name}")
-    st.success(f"✅ Hasil Prediksi: **{hasil}** ({prob_percentage}%)")
-    st.write(f"⏱ Waktu eksekusi: {exec_time:.3f} detik")
+    # Menampilkan gambar dan hasil prediksi secara sejajar
+    col1, col2 = st.columns([1, 1])  # Membagi layout menjadi dua kolom
+
+    with col1:
+        st.image(image, caption="Gambar yang diunggah", use_column_width=True)
+
+    with col2:
+        st.write(f"### Model yang digunakan: {selected_model_name}")
+        st.success(f"✅ Hasil Prediksi: **{hasil}** ({prob_percentage}%)")
+        st.write(f"⏱ Waktu eksekusi: {exec_time:.3f} detik")
 else:
     if uploaded_file is None:
         st.info("📤 Silakan unggah gambar terlebih dahulu.")
