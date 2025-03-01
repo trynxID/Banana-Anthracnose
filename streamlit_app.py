@@ -88,7 +88,7 @@ if uploaded_file is not None and model is not None:
     col1, col2 = st.columns([1, 1])  # Membagi layout menjadi dua kolom
 
     with col1:
-        st.image(image, caption="Gambar yang diunggah", use_column_width=True)
+        st.image(image, caption="Gambar yang diunggah", use_container_width=True)
 
     with col2:
         st.write(f"### Model yang digunakan: {selected_model_name}")
